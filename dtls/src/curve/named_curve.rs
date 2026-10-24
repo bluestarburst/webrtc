@@ -38,16 +38,16 @@ pub struct NamedCurveKeypair {
 fn elliptic_curve_keypair(curve: NamedCurve) -> Result<NamedCurveKeypair> {
     let (public_key, private_key) = match curve {
         NamedCurve::P256 => {
-            let secret_key = p256::ecdh::EphemeralSecret::random(&mut OsRng);
-            let public_key = p256::EncodedPoint::from(secret_key.public_key());
+            let secret_key = p256::ecdh::EphemeralSecret::random(&mut RandCore0_10(OsRng));
+            let public_key = p256::Sec1Point::from(secret_key.public_key());
             (
                 public_key.as_bytes().to_vec(),
                 NamedCurvePrivateKey::EphemeralSecretP256(secret_key),
             )
         }
         NamedCurve::P384 => {
-            let secret_key = p384::ecdh::EphemeralSecret::random(&mut OsRng);
-            let public_key = p384::EncodedPoint::from(secret_key.public_key());
+            let secret_key = p384::ecdh::EphemeralSecret::random(&mut RandCore0_10(OsRng));
+            let public_key = p384::Sec1Point::from(secret_key.public_key());
             (
                 public_key.as_bytes().to_vec(),
                 NamedCurvePrivateKey::EphemeralSecretP384(secret_key),
@@ -80,4 +80,24 @@ impl NamedCurve {
             _ => Err(Error::ErrInvalidNamedCurve),
         }
     }
+}
+
+// Preserve the existing OS entropy owner across RustCrypto's RNG trait update.
+struct RandCore0_10<R>(R);
+impl<R: rand_core::RngCore> rand_core_0_10::TryRng for RandCore0_10<R> {
+    type Error = core::convert::Infallible;
+    fn try_next_u32(&mut self) -> std::result::Result<u32, Self::Error> {
+        Ok(self.0.next_u32())
+    }
+    fn try_next_u64(&mut self) -> std::result::Result<u64, Self::Error> {
+        Ok(self.0.next_u64())
+    }
+    fn try_fill_bytes(&mut self, dst: &mut [u8]) -> std::result::Result<(), Self::Error> {
+        self.0.fill_bytes(dst);
+        Ok(())
+    }
+}
+impl<R: rand_core::RngCore + rand_core::CryptoRng> rand_core_0_10::TryCryptoRng
+    for RandCore0_10<R>
+{
 }

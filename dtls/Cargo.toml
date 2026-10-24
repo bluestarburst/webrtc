@@ -1,21 +1,26 @@
 [package]
-name = "dtls"
-version.workspace = true
+name = "openrtc-dtls"
+version = "0.17.1"
 authors.workspace = true
 edition.workspace = true
 description = "A pure Rust implementation of DTLS"
 license.workspace = true
 documentation = "https://docs.rs/dtls"
 homepage.workspace = true
-repository = "https://github.com/webrtc-rs/webrtc/tree/master/dtls"
+repository = "https://github.com/bluestarburst/webrtc/tree/master/dtls"
+
+[lib]
+name = "dtls"
 
 [dependencies]
-util = { workspace = true, default-features = false, features = ["conn"] }
+util = { package = "webrtc-util", version = "=0.17.1", default-features = false, features = ["conn"] }
 
 byteorder = "1"
 rand_core = "0.6"
-p256 = { version = "0.13", features = ["default", "ecdh", "ecdsa"] }
-p384 = "0.13"
+rand_core_0_10 = { package = "rand_core", version = "0.10" }
+crypto-bigint = { version = "0.7.6", default-features = false }
+p256 = { version = "0.14", features = ["default", "ecdh", "ecdsa"] }
+p384 = { version = "0.14", features = ["ecdh"] }
 rand = "0.9"
 hmac = "0.12"
 sec1 = { version = "0.7", features = ["std"] }

@@ -34,9 +34,9 @@ keywords = ["sansio", "networking", "protocols"]
 categories = ["network-programming"]
 
 [workspace.dependencies]
-webrtc = { version = "0.17.1", path = "webrtc" }
+webrtc = { package = "openrtc-webrtc", version = "=0.17.1", path = "webrtc" }
 data = { version = "0.17.1", path = "data", package = "webrtc-data" }
-dtls = { version = "0.17.1", path = "dtls" }
+dtls = { package = "openrtc-dtls", version = "=0.17.1", path = "dtls" }
 ice = { version = "0.17.1", path = "ice", package = "webrtc-ice" }
 interceptor = { version = "0.17.1", path = "interceptor" }
 mdns = { version = "0.17.1", path = "mdns", package = "webrtc-mdns" }

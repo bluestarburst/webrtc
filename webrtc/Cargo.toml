@@ -1,30 +1,33 @@
 [package]
-name = "webrtc"
-version.workspace = true
+name = "openrtc-webrtc"
+version = "0.17.1"
 authors.workspace = true
 edition.workspace = true
 description = "A pure Rust implementation of WebRTC API"
 license.workspace = true
 documentation.workspace = true
 homepage.workspace = true
-repository.workspace = true
+repository = "https://github.com/bluestarburst/webrtc"
 readme = "../README.md"
 
+[lib]
+name = "webrtc"
+
 [dependencies]
-data.workspace = true
+data = { version = "=0.17.1", package = "webrtc-data" }
 dtls.workspace = true
-ice.workspace = true
-interceptor.workspace = true
-mdns.workspace = true
-media.workspace = true
-rtcp.workspace = true
-rtp.workspace = true
-sctp.workspace = true
-sdp.workspace = true
-srtp.workspace = true
-stun.workspace = true
-turn.workspace = true
-util.workspace = true
+ice = { version = "=0.17.1", package = "webrtc-ice" }
+interceptor = { version = "=0.17.1" }
+mdns = { version = "=0.17.1", package = "webrtc-mdns" }
+media = { version = "=0.17.1", package = "webrtc-media" }
+rtcp = { version = "=0.17.1" }
+rtp = { version = "=0.17.1" }
+sctp = { version = "=0.17.1", package = "webrtc-sctp" }
+sdp = { version = "=0.17.1" }
+srtp = { version = "=0.17.1", package = "webrtc-srtp" }
+stun = { version = "=0.17.0" }
+turn = { version = "=0.17.1" }
+util = { version = "=0.17.1", package = "webrtc-util", default-features = false }
 
 arc-swap = "1"
 tokio = { version = "1.32.0", features = [

@@ -29,6 +29,21 @@ fn test_pre_master_secret() -> Result<()> {
         "PremasterSecret exp: {expected_pre_master_secret:?} actual: {pre_master_secret:?}"
     );
 
+    // Exercise both negotiated NIST curves, including P384 which is not the
+    // default selected by the connection handshake fixtures.
+    for (curve, secret_len) in [(NamedCurve::P256, 32), (NamedCurve::P384, 48)] {
+        let alice = curve.generate_keypair()?;
+        let bob = curve.generate_keypair()?;
+        let alice_secret = prf_pre_master_secret(&bob.public_key, &alice.private_key, curve)?;
+        let bob_secret = prf_pre_master_secret(&alice.public_key, &bob.private_key, curve)?;
+        assert_eq!(alice_secret.len(), secret_len);
+        assert_eq!(alice_secret, bob_secret);
+        assert!(matches!(
+            prf_pre_master_secret(&[0xff], &alice.private_key, curve),
+            Err(Error::Sec1(sec1::Error::PointEncoding))
+        ));
+    }
+
     Ok(())
 }
 
